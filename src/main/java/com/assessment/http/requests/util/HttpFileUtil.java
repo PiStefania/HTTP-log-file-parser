@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.assessment.http.requests.util.Constants.HTTP_LOG_LINE_PATTERN;
+import static com.assessment.http.requests.util.Constants.LOG_LINE_PARTS;
+
 public class HttpFileUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpFileUtil.class);
-    private static final String HTTP_LOG_LINE_PATTERN = "^(\\S+) (\\S+) (\\S+) \\[([\\w:\\/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+)\\s*(\\S+)?\\s*\" (\\d{3}) (\\S+)$";
     private static final Pattern pattern = Pattern.compile(HTTP_LOG_LINE_PATTERN);
 
     public static List<HttpLogLine> readHttpLogFile(String path) {
@@ -26,7 +28,10 @@ public class HttpFileUtil {
             reader = new BufferedReader(new FileReader(new ClassPathResource(path).getFile()));
             String line = reader.readLine();
             while (line != null) {
-                httpLogLines.add(findHttpLogLineParts(line));
+                HttpLogLine httpLogLine = findHttpLogLineParts(line);
+                if (httpLogLine != null) {
+                    httpLogLines.add(httpLogLine);
+                }
                 line = reader.readLine();
             }
             reader.close();
@@ -37,12 +42,9 @@ public class HttpFileUtil {
         return httpLogLines;
     }
 
-    public static HttpLogLine findHttpLogLineParts(String logLine) {
-        if(logLine == null) {
-            return null;
-        }
+    private static HttpLogLine findHttpLogLineParts(String logLine) {
         Matcher matcher = pattern.matcher(logLine);
-        if (matcher.find() && matcher.groupCount() == 9) {
+        if (matcher.find() && matcher.groupCount() == LOG_LINE_PARTS) {
             return new HttpLogLine.Builder()
                     .withHost(matcher.group(1))
                     .withClientIdentd(matcher.group(2))

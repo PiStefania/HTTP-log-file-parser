@@ -1,10 +1,10 @@
-package com.assessment.http.requests.model.response;
+package com.assessment.http.requests.model.dtos;
 
-public class SuccessfullRequests {
+public class RequestsPercentage {
 
     private String percentage;
 
-    public SuccessfullRequests(String percentage) {
+    public RequestsPercentage(String percentage) {
         this.percentage = percentage;
     }
 

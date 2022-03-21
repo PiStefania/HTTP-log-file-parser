@@ -1,215 +1,158 @@
 package com.assessment.http.requests.service;
 
 import com.assessment.http.requests.model.HttpLogLine;
-import com.assessment.http.requests.model.response.SuccessfullRequests;
-import com.assessment.http.requests.model.response.TopHost;
-import com.assessment.http.requests.model.response.TopHostTopSite;
-import com.assessment.http.requests.model.response.TopSite;
-import com.assessment.http.requests.util.HttpFileUtil;
+import com.assessment.http.requests.model.dtos.HostSitesStats;
+import com.assessment.http.requests.model.dtos.HostStats;
+import com.assessment.http.requests.model.dtos.RequestsPercentage;
+import com.assessment.http.requests.model.dtos.SiteStats;
 import com.assessment.http.requests.util.ValueComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
-import static com.assessment.http.requests.util.HttpFileUtil.findHttpLogLineParts;
+import static com.assessment.http.requests.util.Constants.REQUESTS_PARAM_TYPE_SUCCESSFUL;
+import static com.assessment.http.requests.util.Constants.REQUESTS_PARAM_TYPE_UNSUCCESSFUL;
 
-@Component
+@Service
 public class StatsGenerationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpFileUtil.class);
-    private static final String logFilePath = "httpLogFiles/new_final_final_01.log";
+    @Autowired
+    HttpLogSchedulerService httpLogSchedulerService;
 
-    public List<TopSite> getTopSites() {
-        Map<String, Integer> topSites = new HashMap<>();
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(new ClassPathResource(logFilePath).getFile()));
-            String line = reader.readLine();
-            while (line != null) {
-                line = reader.readLine();
-                HttpLogLine httpLogLine = findHttpLogLineParts(line);
-                if (httpLogLine == null || httpLogLine.getEndpoint() == null) {
-                    continue;
-                }
-                if (topSites.get(httpLogLine.getEndpoint()) == null) {
-                    topSites.put(httpLogLine.getEndpoint(), 0);
-                } else {
-                    topSites.put(httpLogLine.getEndpoint(), topSites.get(httpLogLine.getEndpoint()) + 1);
-                }
+    public List<SiteStats> getTopSites(int numberOfSites) {
+        Map<String, Integer> sitesMap = new HashMap<>();
+        for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
+            String endpoint = httpLogLine.getEndpoint();
+            if (endpoint == null) {
+                continue;
             }
-            reader.close();
-        } catch (IOException e) {
-            logger.error("Could not read file with title: {}", logFilePath, e);
-            return null;
+            if (sitesMap.get(endpoint) == null) {
+                sitesMap.put(endpoint, 0);
+            } else {
+                sitesMap.put(endpoint, sitesMap.get(endpoint) + 1);
+            }
         }
-        ValueComparator bvc = new ValueComparator(topSites);
-        TreeMap<String, Integer> sorted_map = new TreeMap<String, Integer>(bvc);
-        sorted_map.putAll(topSites);
+        ValueComparator bvc = new ValueComparator(sitesMap);
+        TreeMap<String, Integer> sortedMap = new TreeMap<>(bvc);
+        sortedMap.putAll(sitesMap);
         int count = 0;
-        List<TopSite> topSitesList = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : sorted_map.entrySet()) {
-            if (count >= 10) break;
-            topSitesList.add(new TopSite(entry.getKey(), entry.getValue()));
+        List<SiteStats> topSites = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+            if (count >= numberOfSites) break;
+            topSites.add(new SiteStats(entry.getKey(), entry.getValue()));
             count++;
         }
-        return topSitesList;
+        return topSites;
     }
 
-    public SuccessfullRequests getSuccessfullRequests() {
-        BufferedReader reader;
+    public RequestsPercentage getPercentageOfRequests(String type) {
         int allRequests = 0;
         int successfulRequests = 0;
-        try {
-            reader = new BufferedReader(new FileReader(new ClassPathResource(logFilePath).getFile()));
-            String line = reader.readLine();
-            while (line != null) {
-                line = reader.readLine();
-                HttpLogLine httpLogLine = findHttpLogLineParts(line);
-                if (httpLogLine == null) {
-                    continue;
-                }
-                allRequests++;
-                if (httpLogLine.getStatusCode() != null && (Integer.valueOf(httpLogLine.getStatusCode()) >= 200 && Integer.valueOf(httpLogLine.getStatusCode()) < 400)) {
-                    successfulRequests++;
-                }
-            }
-            reader.close();
-        } catch (IOException e) {
-            logger.error("Could not read file with title: {}", logFilePath, e);
-            return null;
-        }
-        return new SuccessfullRequests(String.format("%.02f", ((double) successfulRequests / allRequests) * 100));
-    }
-
-    public SuccessfullRequests getUnsuccessfulRequests() {
-        BufferedReader reader;
-        int allRequests = 0;
         int unsuccessfulRequests = 0;
-        try {
-            reader = new BufferedReader(new FileReader(new ClassPathResource(logFilePath).getFile()));
-            String line = reader.readLine();
-            while (line != null) {
-                line = reader.readLine();
-                HttpLogLine httpLogLine = findHttpLogLineParts(line);
-                if (httpLogLine == null) {
-                    continue;
-                }
-                allRequests++;
-                if (httpLogLine.getStatusCode() != null && (Integer.valueOf(httpLogLine.getStatusCode()) < 200 || Integer.valueOf(httpLogLine.getStatusCode()) >= 400)) {
-                    unsuccessfulRequests++;
-                }
+        for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
+            String statusCode = httpLogLine.getStatusCode();
+            if (statusCode == null) {
+                continue;
             }
-            reader.close();
-        } catch (IOException e) {
-            logger.error("Could not read file with title: {}", logFilePath, e);
-            return null;
+            allRequests++;
+            int statusCodeInteger;
+            try {
+                statusCodeInteger = Integer.parseInt(httpLogLine.getStatusCode());
+            } catch (Exception e) {
+                continue;
+            }
+            if (statusCodeInteger >= 200 && statusCodeInteger < 400) {
+                successfulRequests++;
+            } else {
+                unsuccessfulRequests++;
+            }
         }
-        return new SuccessfullRequests(String.format("%.02f", ((double) unsuccessfulRequests / allRequests) * 100));
+        if (REQUESTS_PARAM_TYPE_SUCCESSFUL.equals(type)) {
+            return new RequestsPercentage(String.format("%.02f", ((double) successfulRequests / allRequests) * 100));
+        }
+        if (REQUESTS_PARAM_TYPE_UNSUCCESSFUL.equals(type)) {
+            return new RequestsPercentage(String.format("%.02f", ((double) unsuccessfulRequests / allRequests) * 100));
+        }
+        return null;
     }
 
-    public List<TopHost> getTopHosts() {
-        Map<String, Integer> topHosts = new HashMap<>();
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(new ClassPathResource(logFilePath).getFile()));
-            String line = reader.readLine();
-            while (line != null) {
-                line = reader.readLine();
-                HttpLogLine httpLogLine = findHttpLogLineParts(line);
-                if (httpLogLine == null || httpLogLine.getHost() == null) {
-                    continue;
-                }
-                if (topHosts.get(httpLogLine.getHost()) == null) {
-                    topHosts.put(httpLogLine.getHost(), 0);
-                } else {
-                    topHosts.put(httpLogLine.getHost(), topHosts.get(httpLogLine.getHost()) + 1);
-                }
+    public List<HostStats> getTopHosts(int numberOfHosts) {
+        Map<String, Integer> hostsMap = new HashMap<>();
+        for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
+            String host = httpLogLine.getHost();
+            if (host == null) {
+                continue;
             }
-            reader.close();
-        } catch (IOException e) {
-            logger.error("Could not read file with title: {}", logFilePath, e);
-            return null;
+            if (hostsMap.get(host) == null) {
+                hostsMap.put(host, 0);
+            } else {
+                hostsMap.put(host, hostsMap.get(host) + 1);
+            }
         }
-        ValueComparator bvc = new ValueComparator(topHosts);
-        TreeMap<String, Integer> sorted_map = new TreeMap<String, Integer>(bvc);
-        sorted_map.putAll(topHosts);
+        ValueComparator bvc = new ValueComparator(hostsMap);
+        TreeMap<String, Integer> sortedMap = new TreeMap<>(bvc);
+        sortedMap.putAll(hostsMap);
         int count = 0;
-        List<TopHost> topHostList = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : sorted_map.entrySet()) {
-            if (count >= 10) break;
-            topHostList.add(new TopHost(entry.getKey(), entry.getValue()));
+        List<HostStats> topHosts = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+            if (count >= numberOfHosts) break;
+            topHosts.add(new HostStats(entry.getKey(), entry.getValue()));
             count++;
         }
-        return topHostList;
+        return topHosts;
     }
 
-    public List<TopHostTopSite> getTopSitesTopHosts() {
-        Map<String, Integer> topHosts = new HashMap<>();
-        List<HttpLogLine> httpLogLines = new ArrayList<>();
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(new ClassPathResource(logFilePath).getFile()));
-            String line = reader.readLine();
-            while (line != null) {
-                line = reader.readLine();
-                HttpLogLine httpLogLine = findHttpLogLineParts(line);
-                if (httpLogLine == null || httpLogLine.getHost() == null) {
-                    continue;
-                }
-                httpLogLines.add(httpLogLine);
-                if (topHosts.get(httpLogLine.getHost()) == null) {
-                    topHosts.put(httpLogLine.getHost(), 0);
-                } else {
-                    topHosts.put(httpLogLine.getHost(), topHosts.get(httpLogLine.getHost()) + 1);
-                }
+    public List<HostSitesStats> getTopSitesTopHosts(int numberOfHosts, int numberOfSites) {
+        Map<String, Integer> hostsMap = new HashMap<>();
+        for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
+            String host = httpLogLine.getHost();
+            if (host == null) {
+                continue;
             }
-            reader.close();
-        } catch (IOException e) {
-            logger.error("Could not read file with title: {}", logFilePath, e);
-            return null;
+            if (hostsMap.get(host) == null) {
+                hostsMap.put(host, 0);
+            } else {
+                hostsMap.put(host, hostsMap.get(host) + 1);
+            }
         }
-        ValueComparator bvc = new ValueComparator(topHosts);
-        TreeMap<String, Integer> sorted_map = new TreeMap<String, Integer>(bvc);
-        sorted_map.putAll(topHosts);
+        ValueComparator bvcHosts = new ValueComparator(hostsMap);
+        TreeMap<String, Integer> sortedMapHosts = new TreeMap<>(bvcHosts);
+        sortedMapHosts.putAll(hostsMap);
         int count = 0;
-        List<TopHostTopSite> topHostList = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : sorted_map.entrySet()) {
-            if (count >= 10) break;
-            topHostList.add(new TopHostTopSite(entry.getKey(), entry.getValue()));
+        List<HostSitesStats> topHostSites = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : sortedMapHosts.entrySet()) {
+            if (count >= numberOfHosts) break;
+            topHostSites.add(new HostSitesStats(entry.getKey(), entry.getValue()));
             count++;
         }
-        for(TopHostTopSite topHost: topHostList) {
-            Map<String, Integer> topSites = new HashMap<>();
-            for(HttpLogLine httpLogLine: httpLogLines) {
-                if(topHost.getHost().equals(httpLogLine.getHost())) {
-                    if (httpLogLine.getEndpoint() == null) {
+        for (HostSitesStats topHostSite : topHostSites) {
+            Map<String, Integer> sitesMap = new HashMap<>();
+            for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
+                if (topHostSite.getHost().equals(httpLogLine.getHost())) {
+                    String endpoint = httpLogLine.getEndpoint();
+                    if (endpoint == null) {
                         continue;
                     }
-                    if (topSites.get(httpLogLine.getEndpoint()) == null) {
-                        topSites.put(httpLogLine.getEndpoint(), 0);
+                    if (sitesMap.get(endpoint) == null) {
+                        sitesMap.put(endpoint, 0);
                     } else {
-                        topSites.put(httpLogLine.getEndpoint(), topSites.get(httpLogLine.getEndpoint()) + 1);
+                        sitesMap.put(endpoint, sitesMap.get(endpoint) + 1);
                     }
                 }
             }
-            ValueComparator bvc1 = new ValueComparator(topSites);
-            TreeMap<String, Integer> sorted_map_sites = new TreeMap<String, Integer>(bvc1);
-            sorted_map_sites.putAll(topSites);
-            int count1 = 0;
-            List<TopSite> topSitesList = new ArrayList<>();
-            for (Map.Entry<String, Integer> entry : sorted_map_sites.entrySet()) {
-                if (count1 >= 5) break;
-                topSitesList.add(new TopSite(entry.getKey(), entry.getValue()));
-                count1++;
+            ValueComparator bvcSites = new ValueComparator(sitesMap);
+            TreeMap<String, Integer> sortedMapSites = new TreeMap<>(bvcSites);
+            sortedMapSites.putAll(sitesMap);
+            int countSites = 0;
+            List<SiteStats> topSites = new ArrayList<>();
+            for (Map.Entry<String, Integer> entry : sortedMapSites.entrySet()) {
+                if (countSites >= numberOfSites) break;
+                topSites.add(new SiteStats(entry.getKey(), entry.getValue()));
+                countSites++;
             }
-            topHost.setTopSites(topSitesList);
+            topHostSite.setTopSites(topSites);
         }
-        return topHostList;
+        return topHostSites;
     }
 }

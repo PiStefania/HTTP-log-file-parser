@@ -1,5 +1,8 @@
 HELP.md
 target/
+mvnw
+mvnw.cmd
+src/main/resources/httpLogFiles/**
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

@@ -1,10 +1,10 @@
-package com.assessment.http.requests.model.response;
+package com.assessment.http.requests.model.dtos;
 
-public class TopSite {
+public class SiteStats {
     private String endpoint;
     private int requests;
 
-    public TopSite(String endpoint, int requests) {
+    public SiteStats(String endpoint, int requests) {
         this.endpoint = endpoint;
         this.requests = requests;
     }

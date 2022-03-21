@@ -1,13 +1,10 @@
-package com.assessment.http.requests.model.response;
+package com.assessment.http.requests.model.dtos;
 
-import java.util.List;
-
-public class TopHostTopSite {
+public class HostStats {
     private String host;
     private Integer requests;
-    List<TopSite> topSites;
 
-    public TopHostTopSite(String host, Integer requests) {
+    public HostStats(String host, Integer requests) {
         this.host = host;
         this.requests = requests;
     }
@@ -26,13 +23,5 @@ public class TopHostTopSite {
 
     public void setRequests(Integer requests) {
         this.requests = requests;
-    }
-
-    public List<TopSite> getTopSites() {
-        return topSites;
-    }
-
-    public void setTopSites(List<TopSite> topSites) {
-        this.topSites = topSites;
     }
 }
