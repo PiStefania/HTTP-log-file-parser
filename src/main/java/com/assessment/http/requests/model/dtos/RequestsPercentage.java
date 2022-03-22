@@ -4,6 +4,9 @@ public class RequestsPercentage {
 
     private String percentage;
 
+    public RequestsPercentage() {
+    }
+
     public RequestsPercentage(String percentage) {
         this.percentage = percentage;
     }

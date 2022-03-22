@@ -9,6 +9,9 @@ public class HostStats {
         this.requests = requests;
     }
 
+    public HostStats() {
+    }
+
     public String getHost() {
         return host;
     }

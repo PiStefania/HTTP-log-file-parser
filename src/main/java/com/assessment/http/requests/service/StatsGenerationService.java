@@ -24,11 +24,8 @@ public class StatsGenerationService {
         Map<String, Integer> sitesMap = new HashMap<>();
         for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
             String endpoint = httpLogLine.getEndpoint();
-            if (endpoint == null) {
-                continue;
-            }
             if (sitesMap.get(endpoint) == null) {
-                sitesMap.put(endpoint, 0);
+                sitesMap.put(endpoint, 1);
             } else {
                 sitesMap.put(endpoint, sitesMap.get(endpoint) + 1);
             }
@@ -85,7 +82,7 @@ public class StatsGenerationService {
                 continue;
             }
             if (hostsMap.get(host) == null) {
-                hostsMap.put(host, 0);
+                hostsMap.put(host, 1);
             } else {
                 hostsMap.put(host, hostsMap.get(host) + 1);
             }
@@ -111,7 +108,7 @@ public class StatsGenerationService {
                 continue;
             }
             if (hostsMap.get(host) == null) {
-                hostsMap.put(host, 0);
+                hostsMap.put(host, 1);
             } else {
                 hostsMap.put(host, hostsMap.get(host) + 1);
             }
@@ -135,7 +132,7 @@ public class StatsGenerationService {
                         continue;
                     }
                     if (sitesMap.get(endpoint) == null) {
-                        sitesMap.put(endpoint, 0);
+                        sitesMap.put(endpoint, 1);
                     } else {
                         sitesMap.put(endpoint, sitesMap.get(endpoint) + 1);
                     }

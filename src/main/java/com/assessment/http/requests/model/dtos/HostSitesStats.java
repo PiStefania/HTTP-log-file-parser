@@ -6,6 +6,10 @@ public class HostSitesStats extends HostStats {
 
     List<SiteStats> topSites;
 
+    public HostSitesStats() {
+        super();
+    }
+
     public HostSitesStats(String host, Integer requests) {
         super(host, requests);
     }

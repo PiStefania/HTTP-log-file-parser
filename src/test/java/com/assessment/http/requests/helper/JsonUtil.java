@@ -7,7 +7,9 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -26,8 +28,7 @@ public class JsonUtil {
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         objectMapper.setVisibility(
                 VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, true);
-        return Arrays.asList(objectMapper.readValue(JsonUtil.class.getResourceAsStream(path), entity));
+        return Arrays.asList(objectMapper.readValue(new FileReader(new ClassPathResource(path).getFile()), entity));
     }
 
 }
