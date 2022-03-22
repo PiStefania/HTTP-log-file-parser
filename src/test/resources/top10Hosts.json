@@ -1,0 +1,42 @@
+[
+    {
+        "host": "edams.ksc.nasa.gov",
+        "requests": 6529
+    },
+    {
+        "host": "piweba4y.prodigy.com",
+        "requests": 4845
+    },
+    {
+        "host": "163.206.89.4",
+        "requests": 4790
+    },
+    {
+        "host": "piweba5y.prodigy.com",
+        "requests": 4606
+    },
+    {
+        "host": "piweba3y.prodigy.com",
+        "requests": 4415
+    },
+    {
+        "host": "www-d1.proxy.aol.com",
+        "requests": 3888
+    },
+    {
+        "host": "www-b2.proxy.aol.com",
+        "requests": 3533
+    },
+    {
+        "host": "www-b3.proxy.aol.com",
+        "requests": 3462
+    },
+    {
+        "host": "www-c5.proxy.aol.com",
+        "requests": 3422
+    },
+    {
+        "host": "www-b5.proxy.aol.com",
+        "requests": 3410
+    }
+]

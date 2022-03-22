@@ -1,0 +1,42 @@
+[
+    {
+        "endpoint": "/images/NASA-logosmall.gif",
+        "requests": 97391
+    },
+    {
+        "endpoint": "/images/KSC-logosmall.gif",
+        "requests": 75336
+    },
+    {
+        "endpoint": "/images/MOSAIC-logosmall.gif",
+        "requests": 67447
+    },
+    {
+        "endpoint": "/images/USA-logosmall.gif",
+        "requests": 67067
+    },
+    {
+        "endpoint": "/images/WORLD-logosmall.gif",
+        "requests": 66443
+    },
+    {
+        "endpoint": "/images/ksclogo-medium.gif",
+        "requests": 62777
+    },
+    {
+        "endpoint": "/ksc.html",
+        "requests": 43685
+    },
+    {
+        "endpoint": "/history/apollo/images/apollo-logo1.gif",
+        "requests": 37825
+    },
+    {
+        "endpoint": "/images/launch-logo.gif",
+        "requests": 35137
+    },
+    {
+        "endpoint": "/",
+        "requests": 30330
+    }
+]

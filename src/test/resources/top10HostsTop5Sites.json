@@ -1,0 +1,262 @@
+[
+    {
+        "host": "edams.ksc.nasa.gov",
+        "requests": 6529,
+        "topSites": [
+            {
+                "endpoint": "/ksc.html",
+                "requests": 1019
+            },
+            {
+                "endpoint": "/images/WORLD-logosmall.gif",
+                "requests": 869
+            },
+            {
+                "endpoint": "/images/NASA-logosmall.gif",
+                "requests": 868
+            },
+            {
+                "endpoint": "/images/MOSAIC-logosmall.gif",
+                "requests": 866
+            },
+            {
+                "endpoint": "/images/USA-logosmall.gif",
+                "requests": 866
+            }
+        ]
+    },
+    {
+        "host": "piweba4y.prodigy.com",
+        "requests": 4845,
+        "topSites": [
+            {
+                "endpoint": "/images/KSC-logosmall.gif",
+                "requests": 328
+            },
+            {
+                "endpoint": "/images/NASA-logosmall.gif",
+                "requests": 259
+            },
+            {
+                "endpoint": "/history/apollo/images/apollo-logo1.gif",
+                "requests": 176
+            },
+            {
+                "endpoint": "/images/launch-logo.gif",
+                "requests": 157
+            },
+            {
+                "endpoint": "/images/ksclogo-medium.gif",
+                "requests": 149
+            }
+        ]
+    },
+    {
+        "host": "163.206.89.4",
+        "requests": 4790,
+        "topSites": [
+            {
+                "endpoint": "/images/NASA-logosmall.gif",
+                "requests": 567
+            },
+            {
+                "endpoint": "/htbin/cdt_main.pl",
+                "requests": 359
+            },
+            {
+                "endpoint": "/shuttle/countdown/images/countclock.gif",
+                "requests": 346
+            },
+            {
+                "endpoint": "/ksc.html",
+                "requests": 250
+            },
+            {
+                "endpoint": "/images/USA-logosmall.gif",
+                "requests": 236
+            }
+        ]
+    },
+    {
+        "host": "piweba5y.prodigy.com",
+        "requests": 4606,
+        "topSites": [
+            {
+                "endpoint": "/images/KSC-logosmall.gif",
+                "requests": 266
+            },
+            {
+                "endpoint": "/images/NASA-logosmall.gif",
+                "requests": 229
+            },
+            {
+                "endpoint": "/images/ksclogo-medium.gif",
+                "requests": 151
+            },
+            {
+                "endpoint": "/history/apollo/images/apollo-logo1.gif",
+                "requests": 142
+            },
+            {
+                "endpoint": "/images/launch-logo.gif",
+                "requests": 140
+            }
+        ]
+    },
+    {
+        "host": "piweba3y.prodigy.com",
+        "requests": 4415,
+        "topSites": [
+            {
+                "endpoint": "/images/KSC-logosmall.gif",
+                "requests": 286
+            },
+            {
+                "endpoint": "/images/NASA-logosmall.gif",
+                "requests": 240
+            },
+            {
+                "endpoint": "/history/apollo/images/apollo-logo1.gif",
+                "requests": 146
+            },
+            {
+                "endpoint": "/images/launch-logo.gif",
+                "requests": 141
+            },
+            {
+                "endpoint": "/images/ksclogo-medium.gif",
+                "requests": 136
+            }
+        ]
+    },
+    {
+        "host": "www-d1.proxy.aol.com",
+        "requests": 3888,
+        "topSites": [
+            {
+                "endpoint": "/images/NASA-logosmall.gif",
+                "requests": 182
+            },
+            {
+                "endpoint": "/images/KSC-logosmall.gif",
+                "requests": 165
+            },
+            {
+                "endpoint": "/images/ksclogo-medium.gif",
+                "requests": 127
+            },
+            {
+                "endpoint": "/images/WORLD-logosmall.gif",
+                "requests": 120
+            },
+            {
+                "endpoint": "/images/MOSAIC-logosmall.gif",
+                "requests": 116
+            }
+        ]
+    },
+    {
+        "host": "www-b2.proxy.aol.com",
+        "requests": 3533,
+        "topSites": [
+            {
+                "endpoint": "/images/NASA-logosmall.gif",
+                "requests": 198
+            },
+            {
+                "endpoint": "/images/KSC-logosmall.gif",
+                "requests": 158
+            },
+            {
+                "endpoint": "/images/ksclogo-medium.gif",
+                "requests": 133
+            },
+            {
+                "endpoint": "/images/MOSAIC-logosmall.gif",
+                "requests": 132
+            },
+            {
+                "endpoint": "/images/USA-logosmall.gif",
+                "requests": 130
+            }
+        ]
+    },
+    {
+        "host": "www-b3.proxy.aol.com",
+        "requests": 3462,
+        "topSites": [
+            {
+                "endpoint": "/images/NASA-logosmall.gif",
+                "requests": 189
+            },
+            {
+                "endpoint": "/images/KSC-logosmall.gif",
+                "requests": 148
+            },
+            {
+                "endpoint": "/images/MOSAIC-logosmall.gif",
+                "requests": 133
+            },
+            {
+                "endpoint": "/images/ksclogo-medium.gif",
+                "requests": 129
+            },
+            {
+                "endpoint": "/images/USA-logosmall.gif",
+                "requests": 127
+            }
+        ]
+    },
+    {
+        "host": "www-c5.proxy.aol.com",
+        "requests": 3422,
+        "topSites": [
+            {
+                "endpoint": "/images/NASA-logosmall.gif",
+                "requests": 160
+            },
+            {
+                "endpoint": "/images/KSC-logosmall.gif",
+                "requests": 131
+            },
+            {
+                "endpoint": "/images/USA-logosmall.gif",
+                "requests": 112
+            },
+            {
+                "endpoint": "/images/MOSAIC-logosmall.gif",
+                "requests": 111
+            },
+            {
+                "endpoint": "/images/ksclogo-medium.gif",
+                "requests": 107
+            }
+        ]
+    },
+    {
+        "host": "www-b5.proxy.aol.com",
+        "requests": 3410,
+        "topSites": [
+            {
+                "endpoint": "/images/NASA-logosmall.gif",
+                "requests": 163
+            },
+            {
+                "endpoint": "/images/KSC-logosmall.gif",
+                "requests": 146
+            },
+            {
+                "endpoint": "/images/MOSAIC-logosmall.gif",
+                "requests": 115
+            },
+            {
+                "endpoint": "/images/USA-logosmall.gif",
+                "requests": 115
+            },
+            {
+                "endpoint": "/images/ksclogo-medium.gif",
+                "requests": 115
+            }
+        ]
+    }
+]
