@@ -14,7 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.assessment.http.requests.util.Constants.HTTP_LOG_LINE_PATTERN;
-import static com.assessment.http.requests.util.Constants.LOG_LINE_PARTS;
 
 public class HttpFileUtil {
 
@@ -44,7 +43,7 @@ public class HttpFileUtil {
 
     private static HttpLogLine findHttpLogLineParts(String logLine) {
         Matcher matcher = pattern.matcher(logLine);
-        if (matcher.find() && matcher.groupCount() == LOG_LINE_PARTS) {
+        if (matcher.find()) {
             return new HttpLogLine.Builder()
                     .withHost(matcher.group(1))
                     .withClientIdentd(matcher.group(2))

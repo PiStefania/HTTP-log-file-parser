@@ -31,12 +31,14 @@ public class StatsGenerationService {
             sitesMap.merge(endpoint, 1, Integer::sum);
         }
         TreeMap<String, Integer> sortedMap = sortMap(sitesMap);
-        int count = 0;
+        int countSites = 0;
         List<SiteStats> topSites = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
-            if (count >= numberOfSites) break;
+            if (countSites >= numberOfSites) {
+                break;
+            }
             topSites.add(new SiteStats(entry.getKey(), entry.getValue()));
-            count++;
+            countSites++;
         }
         return topSites;
     }
@@ -46,13 +48,13 @@ public class StatsGenerationService {
         int successfulRequests = 0;
         int unsuccessfulRequests = 0;
         for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
-            allRequests++;
             int statusCodeInteger;
             try {
                 statusCodeInteger = Integer.parseInt(httpLogLine.getStatusCode());
             } catch (Exception e) {
                 continue;
             }
+            allRequests++;
             if (statusCodeInteger >= 200 && statusCodeInteger < 400) {
                 successfulRequests++;
             } else {
@@ -78,12 +80,14 @@ public class StatsGenerationService {
             hostsMap.merge(host, 1, Integer::sum);
         }
         TreeMap<String, Integer> sortedMap = sortMap(hostsMap);
-        int count = 0;
+        int countHosts = 0;
         List<HostStats> topHosts = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
-            if (count >= numberOfHosts) break;
+            if (countHosts >= numberOfHosts) {
+                break;
+            }
             topHosts.add(new HostStats(entry.getKey(), entry.getValue()));
-            count++;
+            countHosts++;
         }
         return topHosts;
     }
@@ -95,12 +99,14 @@ public class StatsGenerationService {
             hostsMap.merge(host, 1, Integer::sum);
         }
         TreeMap<String, Integer> sortedMapHosts = sortMap(hostsMap);
-        int count = 0;
+        int countHosts = 0;
         List<HostSitesStats> topHostSites = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : sortedMapHosts.entrySet()) {
-            if (count >= numberOfHosts) break;
+            if (countHosts >= numberOfHosts) {
+                break;
+            }
             topHostSites.add(new HostSitesStats(entry.getKey(), entry.getValue()));
-            count++;
+            countHosts++;
         }
         for (HostSitesStats topHostSite : topHostSites) {
             Map<String, Integer> sitesMap = new HashMap<>();
@@ -114,7 +120,9 @@ public class StatsGenerationService {
             int countSites = 0;
             List<SiteStats> topSites = new ArrayList<>();
             for (Map.Entry<String, Integer> entry : sortedMapSites.entrySet()) {
-                if (countSites >= numberOfSites) break;
+                if (countSites >= numberOfSites) {
+                    break;
+                }
                 topSites.add(new SiteStats(entry.getKey(), entry.getValue()));
                 countSites++;
             }

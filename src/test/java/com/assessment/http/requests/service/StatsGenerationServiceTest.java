@@ -78,6 +78,18 @@ class StatsGenerationServiceTest {
     }
 
     @Test
+    void getPercentageOfRequestsBypassException() {
+        List<HttpLogLine> httpLogLines = new ArrayList<>();
+        httpLogLines.add(new HttpLogLine.Builder().withStatusCode("200").build());
+        httpLogLines.add(new HttpLogLine.Builder().withStatusCode("500").build());
+        httpLogLines.add(new HttpLogLine.Builder().withStatusCode(null).build());
+        when(httpLogSchedulerService.getHttpLogLines()).thenReturn(httpLogLines);
+        RequestsPercentage requestsPercentage = statsGenerationService.getPercentageOfRequests("successful");
+        assertNotNull(requestsPercentage);
+        assertEquals("50.00", requestsPercentage.getPercentage());
+    }
+
+    @Test
     void getTopHostsSuccessful() {
         List<HttpLogLine> httpLogLines = new ArrayList<>();
         httpLogLines.add(new HttpLogLine.Builder().withHost("uplherc.upl.com").build());

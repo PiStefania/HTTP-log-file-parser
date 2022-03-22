@@ -6,15 +6,17 @@ For building and running the application, you need:
 - Maven version 3.
 
 ## Dependencies
-Application uses only standard libraries of Spring Framework. These are:
+Application uses standard and non-standard libraries of Spring Framework. These are:
 - spring-boot-starter-web
 - spring-boot-starter-test
+- jacoco-maven-plugin
 
 ## Setup the application
 The only thing that you should setup before running the application is the log file path.
 Firstly, you should download the .gx file of the log file through [this link](https://deepsea-tmp.s3.eu-central-1.amazonaws.com/new_final_final_01.log.gz).
 Then, you should unzip it and place it under folder `resources/httpLogFiles`. If folder does not exist, create it. You could also change the property `log.file.path` if you want to place the log file somewhere else.
 Also, after starting the application, you should wait for 2-5 seconds as all log lines are parsed on startup and every 10 minutes. This happens in order for the information to be available for generating the statistics.
+In addition, information that cannot be parsed is bypassed.
 
 ## Running the application
 There are multiple ways to run the application:
