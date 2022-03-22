@@ -19,7 +19,7 @@ public class HttpLogSchedulerService {
 
     @Scheduled(fixedDelayString = "${scheduler.fixed.delay}")
     private void updateHttpLogLines() {
-        httpLogLines = HttpFileUtil.readHttpLogFile(logFilePath);
+        setHttpLogLines(HttpFileUtil.readHttpLogFile(logFilePath));
     }
 
     public List<HttpLogLine> getHttpLogLines() {

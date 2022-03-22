@@ -44,10 +44,26 @@ class StatsGenerationServiceTest {
     }
 
     @Test
+    void getTopSitesSuccessfulMoreThanTop() {
+        List<HttpLogLine> httpLogLines = new ArrayList<>();
+        httpLogLines.add(new HttpLogLine.Builder().withEndpoint("/images/ksclogo-medium.gif").build());
+        httpLogLines.add(new HttpLogLine.Builder().withEndpoint("/images/ksclogo-medium.gif").build());
+        httpLogLines.add(new HttpLogLine.Builder().withEndpoint("/images/ksclogo-medium.gif").build());
+        httpLogLines.add(new HttpLogLine.Builder().withEndpoint("/images/ksclogo-medium.gif").build());
+        httpLogLines.add(new HttpLogLine.Builder().withEndpoint("/").build());
+        when(httpLogSchedulerService.getHttpLogLines()).thenReturn(httpLogLines);
+        List<SiteStats> topSites = statsGenerationService.getTopSites(1);
+        assertNotNull(topSites);
+        assertEquals(1, topSites.size());
+        assertEquals("/images/ksclogo-medium.gif", topSites.get(0).getEndpoint());
+        assertEquals(4, topSites.get(0).getRequests());
+    }
+
+    @Test
     void getPercentageOfRequestsSuccessful() {
         List<HttpLogLine> httpLogLines = new ArrayList<>();
         httpLogLines.add(new HttpLogLine.Builder().withStatusCode("200").build());
-        httpLogLines.add(new HttpLogLine.Builder().withStatusCode("500").build());
+        httpLogLines.add(new HttpLogLine.Builder().withStatusCode("100").build());
         when(httpLogSchedulerService.getHttpLogLines()).thenReturn(httpLogLines);
         RequestsPercentage requestsPercentage = statsGenerationService.getPercentageOfRequests("successful");
         assertNotNull(requestsPercentage);
@@ -90,6 +106,14 @@ class StatsGenerationServiceTest {
     }
 
     @Test
+    void getPercentageOfRequestsNoRequests() {
+        List<HttpLogLine> httpLogLines = new ArrayList<>();
+        when(httpLogSchedulerService.getHttpLogLines()).thenReturn(httpLogLines);
+        RequestsPercentage requestsPercentage = statsGenerationService.getPercentageOfRequests("successful");
+        assertNull(requestsPercentage);
+    }
+
+    @Test
     void getTopHostsSuccessful() {
         List<HttpLogLine> httpLogLines = new ArrayList<>();
         httpLogLines.add(new HttpLogLine.Builder().withHost("uplherc.upl.com").build());
@@ -104,6 +128,22 @@ class StatsGenerationServiceTest {
         assertEquals("uplherc.upl.com", topHosts.get(0).getHost());
         assertEquals(4, topHosts.get(0).getRequests());
         assertEquals("biochem1.biochem.hmc.psu.edu", topHosts.get(1).getHost());
+    }
+
+    @Test
+    void getTopHostsSuccessfulMoreThanTop() {
+        List<HttpLogLine> httpLogLines = new ArrayList<>();
+        httpLogLines.add(new HttpLogLine.Builder().withHost("uplherc.upl.com").build());
+        httpLogLines.add(new HttpLogLine.Builder().withHost("uplherc.upl.com").build());
+        httpLogLines.add(new HttpLogLine.Builder().withHost("uplherc.upl.com").build());
+        httpLogLines.add(new HttpLogLine.Builder().withHost("uplherc.upl.com").build());
+        httpLogLines.add(new HttpLogLine.Builder().withHost("biochem1.biochem.hmc.psu.edu").build());
+        when(httpLogSchedulerService.getHttpLogLines()).thenReturn(httpLogLines);
+        List<HostStats> topHosts = statsGenerationService.getTopHosts(1);
+        assertNotNull(topHosts);
+        assertEquals(1, topHosts.size());
+        assertEquals("uplherc.upl.com", topHosts.get(0).getHost());
+        assertEquals(4, topHosts.get(0).getRequests());
     }
 
     @Test
@@ -129,6 +169,31 @@ class StatsGenerationServiceTest {
         assertEquals("uplherc.upl.com", topHostsTopSites.get(0).getHost());
         assertEquals(1, topHostsTopSites.get(1).getTopSites().size());
         assertEquals("biochem1.biochem.hmc.psu.edu", topHostsTopSites.get(1).getHost());
+        assertEquals("/images/ksclogo-medium.gif", topHostsTopSites.get(0).getTopSites().get(0).getEndpoint());
+        assertEquals(3, topHostsTopSites.get(0).getTopSites().get(0).getRequests());
+    }
+
+    @Test
+    void getTopSitesTopHostsSuccessfulMoreThanTop() {
+        List<HttpLogLine> httpLogLines = new ArrayList<>();
+        httpLogLines
+                .add(new HttpLogLine.Builder().withHost("uplherc.upl.com").withEndpoint("/images/ksclogo-medium.gif")
+                        .build());
+        httpLogLines
+                .add(new HttpLogLine.Builder().withHost("uplherc.upl.com").withEndpoint("/images/ksclogo-medium.gif")
+                        .build());
+        httpLogLines
+                .add(new HttpLogLine.Builder().withHost("uplherc.upl.com").withEndpoint("/images/ksclogo-medium.gif")
+                        .build());
+        httpLogLines.add(new HttpLogLine.Builder().withHost("uplherc.upl.com").withEndpoint("/").build());
+        httpLogLines.add(new HttpLogLine.Builder().withHost("biochem1.biochem.hmc.psu.edu").withEndpoint("/ksc.html")
+                .build());
+        when(httpLogSchedulerService.getHttpLogLines()).thenReturn(httpLogLines);
+        List<HostSitesStats> topHostsTopSites = statsGenerationService.getTopSitesTopHosts(1, 1);
+        assertNotNull(topHostsTopSites);
+        assertEquals(1, topHostsTopSites.size());
+        assertEquals(1, topHostsTopSites.get(0).getTopSites().size());
+        assertEquals("uplherc.upl.com", topHostsTopSites.get(0).getHost());
         assertEquals("/images/ksclogo-medium.gif", topHostsTopSites.get(0).getTopSites().get(0).getEndpoint());
         assertEquals(3, topHostsTopSites.get(0).getTopSites().get(0).getRequests());
     }
