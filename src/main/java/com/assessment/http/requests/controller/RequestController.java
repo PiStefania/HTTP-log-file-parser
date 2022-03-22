@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("requests")
 public class RequestController {
 
+    private final StatsGenerationService statsGenerationService;
+
     @Autowired
-    StatsGenerationService statsGenerationService;
+    public RequestController(StatsGenerationService statsGenerationService) {
+        this.statsGenerationService = statsGenerationService;
+    }
 
     @GetMapping
     public RequestsPercentage getPercentageOfRequests(@RequestParam String type) {

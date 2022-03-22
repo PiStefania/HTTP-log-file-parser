@@ -26,7 +26,7 @@ class SiteControllerTest {
     @Test
     void getTop10SitesSuccessfulResponse() throws Exception {
         when(statsGenerationService.getTopSites(10))
-                .thenReturn(JsonUtil.jsonToListDto("top10Sites.json", SiteStats[].class));
+                .thenReturn(JsonUtil.jsonToListDto("samples/top10Sites.json", SiteStats[].class));
         List<SiteStats> siteStatsList = siteController.getTopSites(10);
         assertEquals(10, siteStatsList.size());
         assertEquals(97391, siteStatsList.get(0).getRequests());

@@ -1,7 +1,6 @@
 package com.assessment.http.requests.service;
 
 import com.assessment.http.requests.model.HttpLogLine;
-import com.assessment.http.requests.util.HttpFileUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

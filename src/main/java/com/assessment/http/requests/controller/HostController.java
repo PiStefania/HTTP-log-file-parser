@@ -15,8 +15,12 @@ import java.util.List;
 @RequestMapping("hosts")
 public class HostController {
 
+    private final StatsGenerationService statsGenerationService;
+
     @Autowired
-    StatsGenerationService statsGenerationService;
+    public HostController(StatsGenerationService statsGenerationService) {
+        this.statsGenerationService = statsGenerationService;
+    }
 
     @GetMapping("/top/{numberOfHosts}")
     public List<HostStats> getTopHosts(@PathVariable int numberOfHosts) {

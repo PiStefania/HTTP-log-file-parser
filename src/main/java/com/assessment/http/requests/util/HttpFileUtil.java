@@ -21,11 +21,12 @@ public class HttpFileUtil {
     private static final Logger logger = LoggerFactory.getLogger(HttpFileUtil.class);
     private static final Pattern pattern = Pattern.compile(HTTP_LOG_LINE_PATTERN);
 
+    private HttpFileUtil() {
+    }
+
     public static List<HttpLogLine> readHttpLogFile(String path) {
         List<HttpLogLine> httpLogLines = new ArrayList<>();
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(new ClassPathResource(path).getFile()));
+        try (BufferedReader reader = new BufferedReader(new FileReader(new ClassPathResource(path).getFile()))) {
             String line = reader.readLine();
             while (line != null) {
                 HttpLogLine httpLogLine = findHttpLogLineParts(line);
@@ -34,10 +35,9 @@ public class HttpFileUtil {
                 }
                 line = reader.readLine();
             }
-            reader.close();
         } catch (IOException e) {
             logger.error("Could not read file with title: {}", path, e);
-            return null;
+            return new ArrayList<>();
         }
         return httpLogLines;
     }

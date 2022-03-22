@@ -11,7 +11,7 @@ class HttpFileUtilTest {
 
     @Test
     void readHttpLogFileSuccessful() {
-        List<HttpLogLine> httpLogLines = HttpFileUtil.readHttpLogFile("httpLogFile.log");
+        List<HttpLogLine> httpLogLines = HttpFileUtil.readHttpLogFile("samples/httpLogFile.log");
         assertNotNull(httpLogLines);
         assertEquals(5, httpLogLines.size());
         assertEquals("uplherc.upl.com", httpLogLines.get(0).getHost());
@@ -21,6 +21,6 @@ class HttpFileUtilTest {
     @Test
     void readHttpLogFileException() {
         List<HttpLogLine> httpLogLines = HttpFileUtil.readHttpLogFile("dummy.log");
-        assertNull(httpLogLines);
+        assertTrue(httpLogLines.isEmpty());
     }
 }

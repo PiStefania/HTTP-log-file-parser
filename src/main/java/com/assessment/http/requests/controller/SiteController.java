@@ -14,8 +14,12 @@ import java.util.List;
 @RequestMapping("sites")
 public class SiteController {
 
+    private final StatsGenerationService statsGenerationService;
+
     @Autowired
-    StatsGenerationService statsGenerationService;
+    public SiteController(StatsGenerationService statsGenerationService) {
+        this.statsGenerationService = statsGenerationService;
+    }
 
     @GetMapping("/top/{numberOfSites}")
     public List<SiteStats> getTopSites(@PathVariable int numberOfSites) {

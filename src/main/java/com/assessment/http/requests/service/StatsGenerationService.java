@@ -17,22 +17,20 @@ import static com.assessment.http.requests.util.Constants.REQUESTS_PARAM_TYPE_UN
 @Service
 public class StatsGenerationService {
 
+    private final HttpLogSchedulerService httpLogSchedulerService;
+
     @Autowired
-    HttpLogSchedulerService httpLogSchedulerService;
+    public StatsGenerationService(HttpLogSchedulerService httpLogSchedulerService) {
+        this.httpLogSchedulerService = httpLogSchedulerService;
+    }
 
     public List<SiteStats> getTopSites(int numberOfSites) {
         Map<String, Integer> sitesMap = new HashMap<>();
         for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
             String endpoint = httpLogLine.getEndpoint();
-            if (sitesMap.get(endpoint) == null) {
-                sitesMap.put(endpoint, 1);
-            } else {
-                sitesMap.put(endpoint, sitesMap.get(endpoint) + 1);
-            }
+            sitesMap.merge(endpoint, 1, Integer::sum);
         }
-        ValueComparator bvc = new ValueComparator(sitesMap);
-        TreeMap<String, Integer> sortedMap = new TreeMap<>(bvc);
-        sortedMap.putAll(sitesMap);
+        TreeMap<String, Integer> sortedMap = sortMap(sitesMap);
         int count = 0;
         List<SiteStats> topSites = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
@@ -48,10 +46,6 @@ public class StatsGenerationService {
         int successfulRequests = 0;
         int unsuccessfulRequests = 0;
         for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
-            String statusCode = httpLogLine.getStatusCode();
-            if (statusCode == null) {
-                continue;
-            }
             allRequests++;
             int statusCodeInteger;
             try {
@@ -64,6 +58,9 @@ public class StatsGenerationService {
             } else {
                 unsuccessfulRequests++;
             }
+        }
+        if (allRequests == 0) {
+            return null;
         }
         if (REQUESTS_PARAM_TYPE_SUCCESSFUL.equals(type)) {
             return new RequestsPercentage(String.format("%.02f", ((double) successfulRequests / allRequests) * 100));
@@ -78,18 +75,9 @@ public class StatsGenerationService {
         Map<String, Integer> hostsMap = new HashMap<>();
         for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
             String host = httpLogLine.getHost();
-            if (host == null) {
-                continue;
-            }
-            if (hostsMap.get(host) == null) {
-                hostsMap.put(host, 1);
-            } else {
-                hostsMap.put(host, hostsMap.get(host) + 1);
-            }
+            hostsMap.merge(host, 1, Integer::sum);
         }
-        ValueComparator bvc = new ValueComparator(hostsMap);
-        TreeMap<String, Integer> sortedMap = new TreeMap<>(bvc);
-        sortedMap.putAll(hostsMap);
+        TreeMap<String, Integer> sortedMap = sortMap(hostsMap);
         int count = 0;
         List<HostStats> topHosts = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
@@ -104,18 +92,9 @@ public class StatsGenerationService {
         Map<String, Integer> hostsMap = new HashMap<>();
         for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
             String host = httpLogLine.getHost();
-            if (host == null) {
-                continue;
-            }
-            if (hostsMap.get(host) == null) {
-                hostsMap.put(host, 1);
-            } else {
-                hostsMap.put(host, hostsMap.get(host) + 1);
-            }
+            hostsMap.merge(host, 1, Integer::sum);
         }
-        ValueComparator bvcHosts = new ValueComparator(hostsMap);
-        TreeMap<String, Integer> sortedMapHosts = new TreeMap<>(bvcHosts);
-        sortedMapHosts.putAll(hostsMap);
+        TreeMap<String, Integer> sortedMapHosts = sortMap(hostsMap);
         int count = 0;
         List<HostSitesStats> topHostSites = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : sortedMapHosts.entrySet()) {
@@ -128,19 +107,10 @@ public class StatsGenerationService {
             for (HttpLogLine httpLogLine : httpLogSchedulerService.getHttpLogLines()) {
                 if (topHostSite.getHost().equals(httpLogLine.getHost())) {
                     String endpoint = httpLogLine.getEndpoint();
-                    if (endpoint == null) {
-                        continue;
-                    }
-                    if (sitesMap.get(endpoint) == null) {
-                        sitesMap.put(endpoint, 1);
-                    } else {
-                        sitesMap.put(endpoint, sitesMap.get(endpoint) + 1);
-                    }
+                    sitesMap.merge(endpoint, 1, Integer::sum);
                 }
             }
-            ValueComparator bvcSites = new ValueComparator(sitesMap);
-            TreeMap<String, Integer> sortedMapSites = new TreeMap<>(bvcSites);
-            sortedMapSites.putAll(sitesMap);
+            TreeMap<String, Integer> sortedMapSites = sortMap(sitesMap);
             int countSites = 0;
             List<SiteStats> topSites = new ArrayList<>();
             for (Map.Entry<String, Integer> entry : sortedMapSites.entrySet()) {
@@ -151,5 +121,12 @@ public class StatsGenerationService {
             topHostSite.setTopSites(topSites);
         }
         return topHostSites;
+    }
+
+    private TreeMap<String, Integer> sortMap(Map<String, Integer> map) {
+        ValueComparator valueComparator = new ValueComparator(map);
+        TreeMap<String, Integer> sortedMap = new TreeMap<>(valueComparator);
+        sortedMap.putAll(map);
+        return sortedMap;
     }
 }

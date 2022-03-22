@@ -28,7 +28,7 @@ class HostControllerTest {
     @Test
     void getTop10HostsSuccessfulResponse() throws IOException {
         when(statsGenerationService.getTopHosts(10))
-                .thenReturn(JsonUtil.jsonToListDto("top10Hosts.json", HostStats[].class));
+                .thenReturn(JsonUtil.jsonToListDto("samples/top10Hosts.json", HostStats[].class));
         List<HostStats> hostStats = hostController.getTopHosts(10);
         assertEquals(10, hostStats.size());
         assertEquals(6529, hostStats.get(0).getRequests());
@@ -37,7 +37,7 @@ class HostControllerTest {
     @Test
     void getTop10HostsTop5SitesSuccessfulResponse() throws IOException {
         when(statsGenerationService.getTopSitesTopHosts(10, 5))
-                .thenReturn(JsonUtil.jsonToListDto("top10HostsTop5Sites.json", HostSitesStats[].class));
+                .thenReturn(JsonUtil.jsonToListDto("samples/top10HostsTop5Sites.json", HostSitesStats[].class));
         List<HostSitesStats> hostSitesStats = hostController.getTopSitesOfTopHosts(10, 5);
         assertEquals(10, hostSitesStats.size());
         assertEquals(6529, hostSitesStats.get(0).getRequests());

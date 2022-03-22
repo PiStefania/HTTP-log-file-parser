@@ -24,7 +24,7 @@ class RequestControllerTest {
     @Test
     void getPercentageOfSuccessfulRequests() throws Exception {
         when(statsGenerationService.getPercentageOfRequests("successful"))
-                .thenReturn(JsonUtil.jsonToDto("requestsPercentage.json", RequestsPercentage.class));
+                .thenReturn(JsonUtil.jsonToDto("samples/requestsPercentage.json", RequestsPercentage.class));
         RequestsPercentage requestsPercentage = requestController.getPercentageOfRequests("successful");
         assertNotNull(requestsPercentage);
         assertEquals("50.22", requestsPercentage.getPercentage());
@@ -33,7 +33,7 @@ class RequestControllerTest {
     @Test
     void getPercentageOfUnsuccessfulRequests() throws Exception {
         when(statsGenerationService.getPercentageOfRequests("unsuccessful"))
-                .thenReturn(JsonUtil.jsonToDto("requestsPercentage.json", RequestsPercentage.class));
+                .thenReturn(JsonUtil.jsonToDto("samples/requestsPercentage.json", RequestsPercentage.class));
         RequestsPercentage requestsPercentage = requestController.getPercentageOfRequests("unsuccessful");
         assertNotNull(requestsPercentage);
         assertEquals("50.22", requestsPercentage.getPercentage());
