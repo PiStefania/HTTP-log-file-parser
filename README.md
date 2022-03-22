@@ -28,6 +28,13 @@ There are currently 5 endpoints implemented.
 - `GET hosts/top/{numberOfHosts}`: returns the top{numberOfHosts} hosts with the most requests.
 - `GET hosts/top/{numberOfHosts}/sites/top/{numberOfSites}`: returns the top{numberOfHosts} hosts with the most requests as well as the top{numberOfSites} consisting these requests.
 
+## Tests
+Test are written using the standard library of Spring Framework. You can selectively run them using your IDE or using the command `mvn clean install`.
+Tests thoroughly use Mockito framework abd active profile.
+
+## Quality Check
+Implementation has been checked using SonarQube. To startup a SonarQube image locally, you should install docker and run the command `docker run -p9000:9000 sonarqube`.
+
 ## Additional links
 - https://httpd.apache.org/docs/2.4/logs.html
 - https://regexr.com/
