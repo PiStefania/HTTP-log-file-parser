@@ -14,8 +14,8 @@ Application uses standard and non-standard libraries of Spring Framework. These 
 ## Setup the application
 The only thing that you should setup before running the application is the log file path.
 Firstly, you should download the .gx file of the log file through [this link](https://deepsea-tmp.s3.eu-central-1.amazonaws.com/new_final_final_01.log.gz).
-Then, you should unzip it and place it under folder `resources/httpLogFiles`. If folder does not exist, create it. You could also change the property `log.file.path` if you want to place the log file somewhere else.
-Also, after starting the application, you should wait for 2-5 seconds as all log lines are parsed on startup and every 10 minutes. This happens in order for the information to be available for generating the statistics.
+Then, you should unzip it and place it under folder `resources/httpLogFiles`. If folder does not exist, you can create it. You could also change the property `log.file.path` if you want to place the log file somewhere else.
+Also, after starting the application, you should wait for 2-5 seconds as all log lines are parsed on startup and every 10 minutes. This happens in order for the information to be available when generating the statistics.
 In addition, information that cannot be parsed is bypassed.
 
 ## Running the application
@@ -32,7 +32,7 @@ There are currently 5 endpoints implemented.
 
 ## Tests
 Test are written using the standard library of Spring Framework. You can selectively run them using your IDE or using the command `mvn clean install`.
-Tests thoroughly use Mockito framework abd active profile.
+Tests thoroughly use Mockito framework and active profile.
 
 ## Quality Check
 Implementation has been checked using SonarQube. To startup a SonarQube image locally, you should install docker and run the command `docker run -p9000:9000 sonarqube`.
